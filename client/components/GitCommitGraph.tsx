@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
-import { FileText, GitBranch, GitMerge } from "lucide-react";
+import { FileText, GitBranch, GitMerge, Maximize2 } from "lucide-react";
 import DiffView from "./DiffView";
 
 interface CommitNode {
@@ -525,6 +525,7 @@ export default function GitCommitGraph() {
   const [hovered, setHovered] = useState<string | null>(null);
   const [selectedCommit, setSelectedCommit] = useState<any>(null);
   const [previewFileIdx, setPreviewFileIdx] = useState<number | null>(null);
+  const [fullscreenDiffIdx, setFullscreenDiffIdx] = useState<number | null>(null);
 
   // Dummy diff data
   const dummyDiff = [
@@ -616,14 +617,26 @@ export default function GitCommitGraph() {
                   >
                     <FileText className="w-5 h-5 mr-2 text-[#4fc3f7]" />
                     <span className="truncate max-w-[200px]">{file.path || "-"}</span>
-                    <span className="ml-auto">
+                    <span className="ml-auto flex items-center gap-2">
                       <span className="text-green-400 font-mono">+{file.additions || 0}</span>
                       <span className="text-red-400 font-mono ml-3">-{file.deletions || 0}</span>
+                      <button
+                        className="ml-3 p-1 rounded hover:bg-[#23242a] transition"
+                        onClick={e => { e.stopPropagation(); setFullscreenDiffIdx(idx); }}
+                        title="Show full diff"
+                      >
+                        <Maximize2 className="w-4 h-4 text-[#4fc3f7]" />
+                      </button>
                     </span>
                   </div>
                   {previewFileIdx === idx && (
                     <div className="mt-2 mb-2">
                       <DiffView diff={dummyDiff} />
+                    </div>
+                  )}
+                  {fullscreenDiffIdx === idx && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+                      <DiffView diff={dummyDiff} fullscreen onClose={() => setFullscreenDiffIdx(null)} />
                     </div>
                   )}
                 </div>
