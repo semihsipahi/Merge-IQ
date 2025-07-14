@@ -591,16 +591,16 @@ export default function GitCommitGraph() {
             {/* Commit List */}
             <div className="relative z-10">
               {commitData.map((commit, i) => {
-                const x = 80 + branchOrder[commit.branch] * 80;
-                const y = i * 64 + 40;
+                const x = 56 + branchOrder[commit.branch] * 48; // daha dar branch aralığı
+                const y = i * 48 + 32; // daha dar satır yüksekliği
                 const isSelected = selectedCommit && selectedCommit.hash === commit.hash;
                 const isHovered = hovered === commit.hash;
                 return (
                   <div
                     key={commit.hash}
                     className={`flex items-center group transition-all duration-150 \
-                      ${isSelected ? "bg-[#2d313a] ring-2 ring-[#4fc3f7]" : isHovered ? "bg-[#232b3a] shadow-lg" : "hover:bg-[#232b3a]"}`}
-                    style={{ position: "absolute", left: 0, top: y - 24, width: "100%", height: 56, paddingLeft: x + 24, zIndex: isSelected ? 2 : 1 }}
+                      ${isSelected ? "bg-[#232b3a] border-l-4 border-[#4fc3f7]" : isHovered ? "bg-[#23272f]" : "hover:bg-[#23272f]"}`}
+                    style={{ position: "absolute", left: 0, top: y - 20, width: "100%", height: 40, paddingLeft: x + 24, zIndex: isSelected ? 2 : 1, borderRadius: 8 }}
                     onClick={() => openCommitDetail(commit)}
                     onMouseEnter={() => setHovered(commit.hash)}
                     onMouseLeave={() => setHovered(null)}
@@ -608,20 +608,20 @@ export default function GitCommitGraph() {
                     {/* Commit Dot */}
                     <div className="relative" style={{ left: -x + 8 }}>
                       <div
-                        className={`w-5 h-5 rounded-full border-2 border-[#23272f] shadow-lg transition-all duration-150 ${isSelected ? "ring-2 ring-[#4fc3f7]" : isHovered ? "ring-2 ring-[#8f95b2]" : ""}`}
-                        style={{ background: commit.branchColor, boxShadow: isSelected ? "0 0 0 4px #4fc3f755" : isHovered ? "0 0 0 4px #8f95b255" : "0 2px 8px #0003" }}
+                        className={`w-3.5 h-3.5 rounded-full border border-[#23272f] transition-all duration-150 ${isSelected ? "ring-2 ring-[#4fc3f7]" : isHovered ? "ring-2 ring-[#8f95b2]" : ""}`}
+                        style={{ background: commit.branchColor, boxShadow: isSelected ? "0 0 0 2px #4fc3f733" : isHovered ? "0 0 0 2px #8f95b233" : "none" }}
                       />
                     </div>
                     {/* Commit Message & Meta */}
-                    <div className="flex flex-col ml-4 min-w-0">
+                    <div className="flex flex-col ml-3 min-w-0">
                       <div className="flex items-center gap-2 min-w-0">
-                        <span className="truncate font-medium text-[15px] text-white max-w-[340px]">{commit.message}</span>
-                        {commit.type === "merge" && <GitMerge className="w-4 h-4 text-[#fbc02d] ml-1" />}
-                        {commit.type === "branch" && <GitBranch className="w-4 h-4 text-[#4fc3f7] ml-1" />}
-                        <span className="ml-2 px-2 py-0.5 rounded bg-[#353945] text-xs font-mono text-[#4fc3f7]">{commit.branch}</span>
+                        <span className="truncate font-medium text-[14px] text-white max-w-[260px]">{commit.message}</span>
+                        {commit.type === "merge" && <GitMerge className="w-3 h-3 text-[#fbc02d] ml-1" />}
+                        {commit.type === "branch" && <GitBranch className="w-3 h-3 text-[#4fc3f7] ml-1" />}
+                        <span className="ml-2 px-1.5 py-0.5 rounded bg-[#232b3a] text-[11px] font-mono text-[#4fc3f7] border border-[#353945]">{commit.branch}</span>
                       </div>
-                      <div className="flex items-center gap-3 text-xs text-[#8f95b2] mt-1">
-                        <Avatar className="w-5 h-5 mr-1">
+                      <div className="flex items-center gap-2 text-[11px] text-[#8f95b2] mt-0.5">
+                        <Avatar className="w-4 h-4 mr-1">
                           <AvatarImage src={commit.author.avatar} />
                           <AvatarFallback>{commit.author.name[0]}</AvatarFallback>
                         </Avatar>
@@ -630,11 +630,6 @@ export default function GitCommitGraph() {
                         <span>{commit.timeAgo}</span>
                         <span className="mx-1">•</span>
                         <span className="font-mono text-[#b0b4c1]">{commit.hash}</span>
-                        <span className="mx-1">•</span>
-                        <span><FileText className="inline w-3 h-3 mr-1" />{commit.filesChanged} files</span>
-                        <span className="mx-1">•</span>
-                        <span className="text-green-400">+{commit.additions}</span>
-                        <span className="text-red-400">-{commit.deletions}</span>
                       </div>
                     </div>
                   </div>
@@ -645,28 +640,28 @@ export default function GitCommitGraph() {
         </ScrollArea>
       </div>
       {/* Sağda sabit detay paneli */}
-      <div className="w-[370px] border-l border-[#353945] bg-[#23272f] flex flex-col p-6 overflow-y-auto" style={{ minWidth: 320 }}>
+      <div className="w-[320px] border-l border-[#23272f] bg-[#1a1d23] flex flex-col p-5 overflow-y-auto" style={{ minWidth: 240 }}>
         {selectedCommit ? (
           <>
-            <div className="flex items-center gap-3 mb-4">
-              <Avatar className="w-10 h-10">
+            <div className="flex items-center gap-2 mb-3">
+              <Avatar className="w-8 h-8">
                 <AvatarImage src={selectedCommit.author.avatar} />
                 <AvatarFallback>{selectedCommit.author.name[0]}</AvatarFallback>
               </Avatar>
               <div>
-                <div className="font-semibold text-lg text-white">{selectedCommit.author.name}</div>
-                <div className="text-xs text-[#8f95b2]">{selectedCommit.date}</div>
+                <div className="font-semibold text-[15px] text-white">{selectedCommit.author.name}</div>
+                <div className="text-[11px] text-[#8f95b2]">{selectedCommit.date}</div>
               </div>
             </div>
-            <div className="mb-2 text-[15px] font-medium text-white">{selectedCommit.message}</div>
-            <div className="mb-4 text-xs text-[#8f95b2] font-mono">{selectedCommit.hash}</div>
-            <div className="mb-4 text-sm text-[#b0b4c1]">{selectedCommit.description}</div>
-            <Separator className="my-4 bg-[#353945]" />
-            <div className="mb-2 text-xs text-[#8f95b2]">Changed Files</div>
-            <div className="flex flex-col gap-2">
+            <div className="mb-1 text-[14px] font-medium text-white">{selectedCommit.message}</div>
+            <div className="mb-2 text-[11px] text-[#8f95b2] font-mono">{selectedCommit.hash}</div>
+            <div className="mb-3 text-[12px] text-[#b0b4c1]">{selectedCommit.description}</div>
+            <Separator className="my-3 bg-[#23272f]" />
+            <div className="mb-1 text-[11px] text-[#8f95b2]">Changed Files</div>
+            <div className="flex flex-col gap-1">
               {selectedCommit.files.map((file: any, idx: number) => (
-                <div key={idx} className="flex items-center gap-2 text-xs text-[#b0b4c1]">
-                  <FileText className="w-4 h-4 mr-1 text-[#4fc3f7]" />
+                <div key={idx} className="flex items-center gap-2 text-[11px] text-[#b0b4c1]">
+                  <FileText className="w-3 h-3 mr-1 text-[#4fc3f7]" />
                   <span>{file.path}</span>
                   <span className="ml-auto">
                     <span className="text-green-400">+{file.additions}</span>
@@ -677,7 +672,7 @@ export default function GitCommitGraph() {
             </div>
           </>
         ) : (
-          <div className="text-[#8f95b2] text-sm mt-10 text-center">Select a commit to see details</div>
+          <div className="text-[#8f95b2] text-[12px] mt-10 text-center">Select a commit to see details</div>
         )}
       </div>
     </div>
