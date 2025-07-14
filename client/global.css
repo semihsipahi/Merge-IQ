@@ -1,0 +1,205 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /**
+   * MergeIQ - Dark Black & Grey Theme
+   * Professional dark theme with black and dark grey colors
+   */
+  :root {
+    /* Main theme colors - Dark black/grey */
+    --background: 220 12% 5%;
+    --foreground: 220 8% 92%;
+
+    --card: 220 12% 8%;
+    --card-foreground: 220 8% 92%;
+
+    --popover: 220 12% 8%;
+    --popover-foreground: 220 8% 92%;
+
+    --primary: 220 8% 85%;
+    --primary-foreground: 220 12% 5%;
+
+    --secondary: 220 12% 12%;
+    --secondary-foreground: 220 8% 92%;
+
+    --muted: 220 12% 10%;
+    --muted-foreground: 220 6% 65%;
+
+    --accent: 220 12% 15%;
+    --accent-foreground: 220 8% 92%;
+
+    --destructive: 0 65% 50%;
+    --destructive-foreground: 220 8% 92%;
+
+    --border: 220 12% 18%;
+    --input: 220 12% 12%;
+    --ring: 220 8% 85%;
+
+    --radius: 0.5rem;
+
+    /* Sidebar colors - Enhanced dark */
+    --sidebar-background: 220 12% 3%;
+    --sidebar-foreground: 220 8% 92%;
+    --sidebar-primary: 220 8% 85%;
+    --sidebar-primary-foreground: 220 12% 5%;
+    --sidebar-accent: 220 12% 8%;
+    --sidebar-accent-foreground: 220 8% 92%;
+    --sidebar-border: 220 12% 15%;
+    --sidebar-ring: 220 8% 85%;
+
+    /* Git specific colors - Vibrant on dark */
+    --git-green: 120 60% 55%;
+    --git-red: 0 70% 60%;
+    --git-blue: 200 80% 60%;
+    --git-orange: 30 90% 65%;
+    --git-purple: 270 70% 65%;
+    --git-yellow: 50 90% 70%;
+    --git-cyan: 180 80% 60%;
+    --git-pink: 320 70% 65%;
+
+    /* Layout specific colors - Black theme */
+    --layout-header: 220 12% 2%;
+    --layout-sidebar: 220 12% 3%;
+    --layout-main: 220 12% 5%;
+    --layout-panel: 220 12% 7%;
+    --layout-hover: 220 12% 12%;
+
+    /* GitHub specific colors */
+    --github-bg: 220 12% 10%;
+
+    /* Glassmorphism variables for dark theme */
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-shadow: rgba(0, 0, 0, 0.5);
+  }
+
+  .light {
+    /* Light mode variant - Keep for contrast */
+    --background: 0 0% 100%;
+    --foreground: 220 12% 5%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 12% 5%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 12% 5%;
+    --primary: 220 12% 5%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 8% 95%;
+    --secondary-foreground: 220 12% 5%;
+    --muted: 220 8% 95%;
+    --muted-foreground: 220 6% 45%;
+    --accent: 220 8% 95%;
+    --accent-foreground: 220 12% 5%;
+    --destructive: 0 65% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 8% 88%;
+    --input: 220 8% 95%;
+    --ring: 220 12% 5%;
+
+    /* Layout colors for light mode */
+    --layout-header: 0 0% 100%;
+    --layout-sidebar: 220 8% 98%;
+    --layout-main: 0 0% 100%;
+    --layout-panel: 220 8% 97%;
+    --layout-hover: 220 8% 92%;
+
+    /* Glassmorphism variables for light mode */
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(0, 0, 0, 0.1);
+    --glass-shadow: rgba(0, 0, 0, 0.1);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    background-image:
+      radial-gradient(
+        circle at 25% 25%,
+        rgba(255, 255, 255, 0.02) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        circle at 75% 75%,
+        rgba(255, 255, 255, 0.01) 0%,
+        transparent 50%
+      );
+  }
+}
+
+@layer components {
+  /* Glassmorphism utility classes - Enhanced for dark theme */
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px var(--glass-shadow);
+  }
+
+  .glass-subtle {
+    background: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--glass-border);
+  }
+
+  /* Gradient backgrounds - Subtle for dark theme */
+  .gradient-primary {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.05) 0%,
+      rgba(255, 255, 255, 0.02) 100%
+    );
+  }
+
+  .gradient-secondary {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--secondary) / 0.8) 0%,
+      hsl(var(--secondary) / 0.6) 100%
+    );
+  }
+
+  .gradient-card {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--card) / 0.9) 0%,
+      hsl(var(--card) / 0.7) 100%
+    );
+  }
+
+  /* Enhanced dividers for dark theme */
+  .divider-gradient {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.1) 50%,
+      transparent 100%
+    );
+  }
+
+  /* Dark scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--accent));
+  }
+}

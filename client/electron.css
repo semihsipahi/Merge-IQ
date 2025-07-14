@@ -1,0 +1,89 @@
+/* Electron-specific styles */
+
+/* macOS titlebar drag region */
+.drag {
+  -webkit-app-region: drag;
+}
+
+.no-drag {
+  -webkit-app-region: no-drag;
+}
+
+/* Custom window controls for frameless windows */
+.window-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+}
+
+.window-control {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  -webkit-app-region: no-drag;
+}
+
+.window-control.close {
+  background-color: #ff5f57;
+}
+
+.window-control.minimize {
+  background-color: #ffbd2e;
+}
+
+.window-control.maximize {
+  background-color: #28ca42;
+}
+
+.window-control:hover {
+  opacity: 0.8;
+}
+
+/* Platform-specific adjustments */
+.platform-darwin {
+  /* macOS specific styles */
+}
+
+.platform-win32 {
+  /* Windows specific styles */
+}
+
+.platform-linux {
+  /* Linux specific styles */
+}
+
+/* Scrollbar styling for desktop */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--border) / 0.8);
+}
+
+/* Selection styling */
+::selection {
+  background: hsl(var(--primary) / 0.2);
+  color: hsl(var(--primary-foreground));
+}
+
+/* Focus outline for accessibility */
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
