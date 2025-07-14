@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { FileText, GitBranch, GitMerge } from "lucide-react";
+import DiffView from "./DiffView";
 
 interface CommitNode {
   id: string;
@@ -487,6 +488,15 @@ const parentMap: Record<string, string[]> = {
 export default function GitCommitGraph() {
   const [hovered, setHovered] = useState<string | null>(null);
   const [selectedCommit, setSelectedCommit] = useState<any>(null);
+  const [previewFileIdx, setPreviewFileIdx] = useState<number | null>(null);
+
+  // Dummy diff data
+  const dummyDiff = [
+    { type: "context", content: "function sum(a, b) {" },
+    { type: "add", content: "  return a + b + 1;" },
+    { type: "remove", content: "  return a + b;" },
+    { type: "context", content: "}" },
+  ];
 
   return (
     <div className="flex flex-row h-full w-full bg-[#101114] text-[#E5E7EB] font-inter">
@@ -562,13 +572,24 @@ export default function GitCommitGraph() {
             <div className="mb-3 text-sm text-[#A1A1AA] font-semibold">Changed Files</div>
             <div className="flex flex-col gap-3">
               {(selectedCommit.files || []).map((file: any, idx: number) => (
-                <div key={idx} className="flex items-center gap-3 text-sm text-[#b0b4c1] bg-[#181A20] rounded px-3 py-2">
-                  <FileText className="w-5 h-5 mr-2 text-[#4fc3f7]" />
-                  <span className="truncate max-w-[200px]">{file.path || "-"}</span>
-                  <span className="ml-auto">
-                    <span className="text-green-400 font-mono">+{file.additions || 0}</span>
-                    <span className="text-red-400 font-mono ml-3">-{file.deletions || 0}</span>
-                  </span>
+                <div key={idx}>
+                  <div
+                    className={`flex items-center gap-3 text-sm text-[#b0b4c1] bg-[#181A20] rounded px-3 py-2 cursor-pointer transition-all \
+                      ${previewFileIdx === idx ? "ring-2 ring-[#4fc3f7] bg-[#1a2a3a]" : "hover:bg-[#23242a]"}`}
+                    onClick={() => setPreviewFileIdx(previewFileIdx === idx ? null : idx)}
+                  >
+                    <FileText className="w-5 h-5 mr-2 text-[#4fc3f7]" />
+                    <span className="truncate max-w-[200px]">{file.path || "-"}</span>
+                    <span className="ml-auto">
+                      <span className="text-green-400 font-mono">+{file.additions || 0}</span>
+                      <span className="text-red-400 font-mono ml-3">-{file.deletions || 0}</span>
+                    </span>
+                  </div>
+                  {previewFileIdx === idx && (
+                    <div className="mt-2 mb-2">
+                      <DiffView diff={dummyDiff} />
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
