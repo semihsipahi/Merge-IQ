@@ -518,7 +518,7 @@ export default function GitCommitGraph() {
   };
 
   return (
-    <div className="flex-1 bg-background flex flex-col">
+    <div className="flex-1 bg-background flex flex-col min-h-0">
       {/* Dark Header */}
       <div className="px-6 py-5 border-b border-border bg-layout-panel/50 glass-subtle flex-shrink-0">
         <div className="flex items-center justify-between">
@@ -548,8 +548,8 @@ export default function GitCommitGraph() {
       </div>
 
       {/* Fixed height scrollable content */}
-      <div className="flex-1 overflow-hidden">
-        <ScrollArea className="h-full">
+      <div className="flex-1 overflow-auto min-h-0">
+        <ScrollArea className="h-[calc(100vh-160px)]">
           <div className="p-6">
             <div className="relative">
               {/* Vertical timeline line */}

@@ -14,6 +14,7 @@ import {
   Sparkles,
   Tag,
   Users,
+  FileText,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -22,6 +23,7 @@ export default function GitSidebar() {
     local: true,
     remote: true,
     tags: false,
+    changes: true,
   });
 
   const toggleSection = (section: keyof typeof expandedSections) => {
@@ -49,6 +51,82 @@ export default function GitSidebar() {
     { name: "v0.9.2", date: "2024-01-10" },
     { name: "v0.9.1", date: "2024-01-05" },
   ];
+
+  // Mock data for changes
+  const changes = [
+    {
+      type: "folder",
+      name: "src",
+      children: [
+        {
+          type: "file",
+          name: "App.tsx",
+          added: 10,
+          removed: 2,
+        },
+        {
+          type: "file",
+          name: "main.tsx",
+          added: 3,
+          removed: 0,
+        },
+        {
+          type: "folder",
+          name: "components",
+          children: [
+            {
+              type: "file",
+              name: "Header.tsx",
+              added: 0,
+              removed: 1,
+            },
+            {
+              type: "file",
+              name: "Sidebar.tsx",
+              added: 2,
+              removed: 2,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      type: "file",
+      name: "package.json",
+      added: 1,
+      removed: 0,
+    },
+  ];
+
+  // Recursive render for changes tree
+  function renderChangesTree(nodes: any[], level = 0) {
+    return (
+      <div className={level === 0 ? "space-y-1" : "pl-4 space-y-1"}>
+        {nodes.map((node, idx) => {
+          if (node.type === "folder") {
+            return (
+              <div key={node.name + idx}>
+                <div className="flex items-center gap-2 text-sm font-medium text-foreground/80">
+                  <ChevronRight className="w-3 h-3 text-muted-foreground" />
+                  <span>{node.name}</span>
+                </div>
+                {renderChangesTree(node.children, level + 1)}
+              </div>
+            );
+          } else {
+            return (
+              <div key={node.name + idx} className="flex items-center gap-2 p-2 rounded hover:bg-accent/30 transition-colors">
+                <FileText className="w-4 h-4 text-muted-foreground" />
+                <span className="flex-1 truncate text-sm">{node.name}</span>
+                <span className="text-xs text-git-green font-mono">+{node.added}</span>
+                <span className="text-xs text-git-red font-mono">-{node.removed}</span>
+              </div>
+            );
+          }
+        })}
+      </div>
+    );
+  }
 
   return (
     <aside className="w-72 bg-layout-sidebar/80 backdrop-blur-md border-r border-border/50 flex flex-col glass-subtle">
@@ -104,6 +182,36 @@ export default function GitSidebar() {
                 View History
               </Button>
             </div>
+          </div>
+
+          {/* Changes Section */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <button
+                onClick={() => toggleSection("changes")}
+                className="flex items-center gap-2 text-xs font-semibold text-git-yellow uppercase tracking-wider hover:text-foreground transition-colors"
+              >
+                {expandedSections.changes ? (
+                  <ChevronDown className="w-3 h-3" />
+                ) : (
+                  <ChevronRight className="w-3 h-3" />
+                )}
+                <div className="w-1 h-1 bg-git-yellow rounded-full" />
+                Changes
+              </button>
+              <Badge variant="secondary" className="text-xs h-5 gradient-secondary border-0">
+                {changes.reduce((acc, node) => {
+                  if (node.type === "file") return acc + 1;
+                  if (node.type === "folder") return acc + (node.children?.length || 0);
+                  return acc;
+                }, 0)}
+              </Badge>
+            </div>
+            {expandedSections.changes && (
+              <div>
+                {renderChangesTree(changes)}
+              </div>
+            )}
           </div>
 
           <div className="divider-gradient h-px w-full" />
