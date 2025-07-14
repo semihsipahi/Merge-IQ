@@ -21,7 +21,13 @@ interface CommitNode {
   additions: number;
   deletions: number;
   branchColor: string;
+  files?: { path: string; additions: number; deletions: number }[];
 }
+
+const dummyFiles = [
+  { path: "src/utils/math.ts", additions: 2, deletions: 1 },
+  { path: "src/components/Button.tsx", additions: 5, deletions: 0 },
+];
 
 const commitData: CommitNode[] = [
   {
@@ -38,6 +44,7 @@ const commitData: CommitNode[] = [
     additions: 145,
     deletions: 23,
     branchColor: "hsl(var(--git-blue))",
+    files: dummyFiles,
   },
   {
     id: "2",
@@ -52,6 +59,7 @@ const commitData: CommitNode[] = [
     additions: 200,
     deletions: 45,
     branchColor: "hsl(var(--git-blue))",
+    files: dummyFiles,
   },
   {
     id: "3",
@@ -66,6 +74,7 @@ const commitData: CommitNode[] = [
     additions: 67,
     deletions: 12,
     branchColor: "hsl(var(--git-green))",
+    files: dummyFiles,
   },
   {
     id: "4",
@@ -81,6 +90,7 @@ const commitData: CommitNode[] = [
     additions: 15,
     deletions: 8,
     branchColor: "hsl(var(--git-blue))",
+    files: dummyFiles,
   },
   {
     id: "5",
@@ -96,6 +106,7 @@ const commitData: CommitNode[] = [
     additions: 450,
     deletions: 0,
     branchColor: "hsl(var(--git-blue))",
+    files: dummyFiles,
   },
   {
     id: "6",
@@ -110,6 +121,7 @@ const commitData: CommitNode[] = [
     additions: 89,
     deletions: 5,
     branchColor: "hsl(var(--git-purple))",
+    files: dummyFiles,
   },
   {
     id: "7",
@@ -124,6 +136,7 @@ const commitData: CommitNode[] = [
     additions: 92,
     deletions: 12,
     branchColor: "hsl(var(--git-orange))",
+    files: dummyFiles,
   },
   {
     id: "8",
@@ -138,6 +151,7 @@ const commitData: CommitNode[] = [
     additions: 156,
     deletions: 23,
     branchColor: "hsl(var(--git-cyan))",
+    files: dummyFiles,
   },
   {
     id: "9",
@@ -152,6 +166,7 @@ const commitData: CommitNode[] = [
     additions: 234,
     deletions: 45,
     branchColor: "hsl(var(--git-yellow))",
+    files: dummyFiles,
   },
   {
     id: "10",
@@ -166,6 +181,7 @@ const commitData: CommitNode[] = [
     additions: 12,
     deletions: 8,
     branchColor: "hsl(var(--git-blue))",
+    files: dummyFiles,
   },
   {
     id: "11",
@@ -180,6 +196,7 @@ const commitData: CommitNode[] = [
     additions: 8,
     deletions: 15,
     branchColor: "hsl(var(--git-red))",
+    files: dummyFiles,
   },
   {
     id: "12",
@@ -194,6 +211,7 @@ const commitData: CommitNode[] = [
     additions: 67,
     deletions: 34,
     branchColor: "hsl(var(--git-blue))",
+    files: dummyFiles,
   },
   {
     id: "13",
@@ -208,6 +226,7 @@ const commitData: CommitNode[] = [
     additions: 178,
     deletions: 23,
     branchColor: "hsl(var(--git-pink))",
+    files: dummyFiles,
   },
   {
     id: "14",
@@ -222,6 +241,7 @@ const commitData: CommitNode[] = [
     additions: 145,
     deletions: 12,
     branchColor: "hsl(var(--git-purple))",
+    files: dummyFiles,
   },
   {
     id: "15",
@@ -236,6 +256,7 @@ const commitData: CommitNode[] = [
     additions: 289,
     deletions: 45,
     branchColor: "hsl(var(--git-green))",
+    files: dummyFiles,
   },
   {
     id: "16",
@@ -251,6 +272,7 @@ const commitData: CommitNode[] = [
     additions: 134,
     deletions: 67,
     branchColor: "hsl(var(--git-orange))",
+    files: dummyFiles,
   },
   {
     id: "17",
@@ -269,6 +291,7 @@ const commitData: CommitNode[] = [
     additions: 267,
     deletions: 23,
     branchColor: "hsl(var(--git-cyan))",
+    files: dummyFiles,
   },
   {
     id: "18",
@@ -283,6 +306,7 @@ const commitData: CommitNode[] = [
     additions: 198,
     deletions: 34,
     branchColor: "hsl(var(--git-yellow))",
+    files: dummyFiles,
   },
   {
     id: "19",
@@ -297,6 +321,7 @@ const commitData: CommitNode[] = [
     additions: 456,
     deletions: 89,
     branchColor: "hsl(var(--git-purple))",
+    files: dummyFiles,
   },
   {
     id: "20",
@@ -311,6 +336,7 @@ const commitData: CommitNode[] = [
     additions: 234,
     deletions: 0,
     branchColor: "hsl(var(--git-blue))",
+    files: dummyFiles,
   },
   // Additional commits for scrolling
   {
@@ -326,6 +352,7 @@ const commitData: CommitNode[] = [
     additions: 123,
     deletions: 45,
     branchColor: "hsl(var(--git-orange))",
+    files: dummyFiles,
   },
   {
     id: "22",
@@ -340,6 +367,7 @@ const commitData: CommitNode[] = [
     additions: 267,
     deletions: 23,
     branchColor: "hsl(var(--git-cyan))",
+    files: dummyFiles,
   },
   {
     id: "23",
@@ -354,6 +382,7 @@ const commitData: CommitNode[] = [
     additions: 189,
     deletions: 12,
     branchColor: "hsl(var(--git-yellow))",
+    files: dummyFiles,
   },
   {
     id: "24",
@@ -368,6 +397,7 @@ const commitData: CommitNode[] = [
     additions: 234,
     deletions: 78,
     branchColor: "hsl(var(--git-blue))",
+    files: dummyFiles,
   },
   {
     id: "25",
@@ -386,6 +416,7 @@ const commitData: CommitNode[] = [
     additions: 156,
     deletions: 89,
     branchColor: "hsl(var(--git-green))",
+    files: dummyFiles,
   },
   {
     id: "26",
@@ -400,6 +431,7 @@ const commitData: CommitNode[] = [
     additions: 145,
     deletions: 23,
     branchColor: "hsl(var(--git-pink))",
+    files: dummyFiles,
   },
   {
     id: "27",
@@ -414,6 +446,7 @@ const commitData: CommitNode[] = [
     additions: 98,
     deletions: 34,
     branchColor: "hsl(var(--git-purple))",
+    files: dummyFiles,
   },
   {
     id: "28",
@@ -432,6 +465,7 @@ const commitData: CommitNode[] = [
     additions: 178,
     deletions: 45,
     branchColor: "hsl(var(--git-red))",
+    files: dummyFiles,
   },
   {
     id: "29",
@@ -446,6 +480,7 @@ const commitData: CommitNode[] = [
     additions: 234,
     deletions: 67,
     branchColor: "hsl(var(--git-cyan))",
+    files: dummyFiles,
   },
   {
     id: "30",
@@ -460,6 +495,7 @@ const commitData: CommitNode[] = [
     additions: 345,
     deletions: 23,
     branchColor: "hsl(var(--git-green))",
+    files: dummyFiles,
   },
 ];
 
