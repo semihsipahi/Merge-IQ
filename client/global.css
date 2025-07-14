@@ -203,3 +203,23 @@
     background: hsl(var(--accent));
   }
 }
+
+.commit-tooltip {
+  background: #23272e;
+  color: #eaeaea;
+  border-radius: 8px;
+  padding: 10px 14px;
+  box-shadow: 0 2px 12px #000a;
+  font-size: 0.95em;
+  pointer-events: none;
+  font-family: 'JetBrains Mono', 'Fira Mono', monospace;
+}
+.commit-tooltip .hash {
+  color: #7ecfff;
+  font-family: monospace;
+  font-size: 0.9em;
+}
+.commit-tooltip .date {
+  color: #aaa;
+  font-size: 0.85em;
+}
