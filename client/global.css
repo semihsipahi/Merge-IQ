@@ -2,6 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  font-size: 14px;
+  /* Compact scrollbars for all */
+  scrollbar-width: thin;
+  scrollbar-color: #23242a #181A20;
+}
+body {
+  font-size: 0.95rem;
+}
+
+/* For webkit browsers */
+::-webkit-scrollbar {
+  width: 7px;
+  background: #181A20;
+}
+::-webkit-scrollbar-thumb {
+  background: #23242a;
+  border-radius: 6px;
+}
+
 @layer base {
   /**
    * MergeIQ - Dark Black & Grey Theme

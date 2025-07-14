@@ -563,14 +563,14 @@ export default function GitCommitGraph() {
                   onMouseEnter={() => setHovered(commit.hash)}
                   onMouseLeave={() => setHovered(null)}
                 >
-                  <div className="flex items-center gap-3 min-w-0 w-full">
-                    <span className="truncate font-semibold text-[15px] text-[#E5E7EB] flex-1">{commit.message}</span>
-                    {commit.type === "merge" && <GitMerge className="w-4 h-4 text-[#fbc02d] ml-1" />}
-                    {commit.type === "branch" && <GitBranch className="w-4 h-4 text-[#4fc3f7] ml-1" />}
-                    <span className="ml-2 px-2 py-0.5 rounded bg-[#23242a] text-[11px] font-mono text-[#4fc3f7] border border-[#23242a]">{commit.branch}</span>
+                  <div className="flex items-center gap-2 min-w-0 w-full">
+                    <span className="truncate font-semibold text-[13px] text-[#E5E7EB] flex-1">{commit.message}</span>
+                    {commit.type === "merge" && <GitMerge className="w-3 h-3 text-[#fbc02d] ml-1" />}
+                    {commit.type === "branch" && <GitBranch className="w-3 h-3 text-[#4fc3f7] ml-1" />}
+                    <span className="ml-2 px-1.5 py-0.5 rounded bg-[#23242a] text-[10px] font-mono text-[#4fc3f7] border border-[#23242a]">{commit.branch}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-[12px] text-[#A1A1AA] mt-1 w-full">
-                    <Avatar className="w-4 h-4 mr-1">
+                  <div className="flex items-center gap-1 text-[11px] text-[#A1A1AA] mt-0.5 w-full">
+                    <Avatar className="w-3.5 h-3.5 mr-1">
                       <AvatarImage src={commit.author.avatar} />
                       <AvatarFallback>{commit.author.name[0]}</AvatarFallback>
                     </Avatar>
@@ -611,21 +611,21 @@ export default function GitCommitGraph() {
               {(selectedCommit.files || []).map((file: any, idx: number) => (
                 <div key={idx}>
                   <div
-                    className={`flex items-center gap-3 text-sm text-[#b0b4c1] bg-[#181A20] rounded px-3 py-2 cursor-pointer transition-all \
+                    className={`flex items-center gap-2 text-[12px] text-[#b0b4c1] bg-[#181A20] rounded px-2 py-1 cursor-pointer transition-all \
                       ${previewFileIdx === idx ? "ring-2 ring-[#4fc3f7] bg-[#1a2a3a]" : "hover:bg-[#23242a]"}`}
                     onClick={() => setPreviewFileIdx(previewFileIdx === idx ? null : idx)}
                   >
-                    <FileText className="w-5 h-5 mr-2 text-[#4fc3f7]" />
-                    <span className="truncate max-w-[200px]">{file.path || "-"}</span>
+                    <FileText className="w-4 h-4 mr-2 text-[#4fc3f7]" />
+                    <span className="truncate max-w-[160px]">{file.path || "-"}</span>
                     <span className="ml-auto flex items-center gap-2">
-                      <span className="text-green-400 font-mono">+{file.additions || 0}</span>
-                      <span className="text-red-400 font-mono ml-3">-{file.deletions || 0}</span>
+                      <span className="text-green-400 font-mono text-xs">+{file.additions || 0}</span>
+                      <span className="text-red-400 font-mono ml-2 text-xs">-{file.deletions || 0}</span>
                       <button
-                        className="ml-3 p-1 rounded hover:bg-[#23242a] transition"
+                        className="ml-2 p-1 rounded hover:bg-[#23242a] transition"
                         onClick={e => { e.stopPropagation(); setFullscreenDiffIdx(idx); }}
                         title="Show full diff"
                       >
-                        <Maximize2 className="w-4 h-4 text-[#4fc3f7]" />
+                        <Maximize2 className="w-3.5 h-3.5 text-[#4fc3f7]" />
                       </button>
                     </span>
                   </div>
