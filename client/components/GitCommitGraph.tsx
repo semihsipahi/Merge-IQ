@@ -594,18 +594,22 @@ export default function GitCommitGraph() {
                 const x = 80 + branchOrder[commit.branch] * 80;
                 const y = i * 64 + 40;
                 const isSelected = selectedCommit && selectedCommit.hash === commit.hash;
+                const isHovered = hovered === commit.hash;
                 return (
                   <div
                     key={commit.hash}
-                    className={`flex items-center group transition-all duration-150 ${isSelected ? "bg-[#2d313a]" : "hover:bg-[#232b3a]"}`}
-                    style={{ position: "absolute", left: 0, top: y - 24, width: "100%", height: 56, paddingLeft: x + 24 }}
+                    className={`flex items-center group transition-all duration-150 \
+                      ${isSelected ? "bg-[#2d313a] ring-2 ring-[#4fc3f7]" : isHovered ? "bg-[#232b3a] shadow-lg" : "hover:bg-[#232b3a]"}`}
+                    style={{ position: "absolute", left: 0, top: y - 24, width: "100%", height: 56, paddingLeft: x + 24, zIndex: isSelected ? 2 : 1 }}
                     onClick={() => openCommitDetail(commit)}
+                    onMouseEnter={() => setHovered(commit.hash)}
+                    onMouseLeave={() => setHovered(null)}
                   >
                     {/* Commit Dot */}
                     <div className="relative" style={{ left: -x + 8 }}>
                       <div
-                        className={`w-5 h-5 rounded-full border-2 border-[#23272f] shadow-lg transition-all duration-150 ${isSelected ? "ring-2 ring-[#4fc3f7]" : ""}`}
-                        style={{ background: commit.branchColor, boxShadow: isSelected ? "0 0 0 4px #4fc3f755" : "0 2px 8px #0003" }}
+                        className={`w-5 h-5 rounded-full border-2 border-[#23272f] shadow-lg transition-all duration-150 ${isSelected ? "ring-2 ring-[#4fc3f7]" : isHovered ? "ring-2 ring-[#8f95b2]" : ""}`}
+                        style={{ background: commit.branchColor, boxShadow: isSelected ? "0 0 0 4px #4fc3f755" : isHovered ? "0 0 0 4px #8f95b255" : "0 2px 8px #0003" }}
                       />
                     </div>
                     {/* Commit Message & Meta */}
