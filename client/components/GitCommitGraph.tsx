@@ -631,12 +631,12 @@ export default function GitCommitGraph() {
                   </div>
                   {previewFileIdx === idx && (
                     <div className="mt-2 mb-2">
-                      <DiffView diff={dummyDiff} />
+                      <DiffView />
                     </div>
                   )}
                   {fullscreenDiffIdx === idx && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
-                      <DiffView diff={dummyDiff} fullscreen onClose={() => setFullscreenDiffIdx(null)} />
+                      <DiffView fullscreen onClose={() => setFullscreenDiffIdx(null)} />
                     </div>
                   )}
                 </div>
