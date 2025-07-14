@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
-import { FileText, GitBranch, GitMerge, Maximize2 } from "lucide-react";
+import { FileText, GitBranch, GitMerge, Maximize2, X } from "lucide-react";
 import DiffView from "./DiffView";
 
 interface CommitNode {
@@ -526,6 +526,7 @@ export default function GitCommitGraph() {
   const [selectedCommit, setSelectedCommit] = useState<any>(null);
   const [previewFileIdx, setPreviewFileIdx] = useState<number | null>(null);
   const [fullscreenDiffIdx, setFullscreenDiffIdx] = useState<number | null>(null);
+  const [rightPanelOpen, setRightPanelOpen] = useState(true);
 
   // Dummy diff data
   const dummyDiff = [
@@ -538,7 +539,7 @@ export default function GitCommitGraph() {
   return (
     <div className="flex flex-row h-full w-full bg-[#101114] text-[#E5E7EB] font-inter">
       {/* Orta alan: Commit Graph */}
-      <div className="flex-1 flex flex-col relative overflow-x-auto" style={{ minWidth: 700, background: '#181A20' }}>
+      <div className={`flex-1 flex flex-col relative overflow-x-auto transition-all duration-200 ${rightPanelOpen ? '' : '!w-full'}`} style={{ minWidth: 700, background: '#181A20' }}>
         {/* Header */}
         <div className="px-10 py-6 border-b border-[#181A20] bg-[#101114] flex-shrink-0 flex items-center justify-between">
           <div>
@@ -559,7 +560,7 @@ export default function GitCommitGraph() {
                     border \
                     ${isSelected ? "border-[#4fc3f7] bg-[#17293a] shadow-lg scale-[0.99]" : isHovered ? "border-[#23242a] bg-[#181d22] scale-[0.995]" : "border-transparent hover:border-[#23242a] hover:bg-[#181d22]"}`}
                   style={{ borderRadius: 10, margin: '4px 0', boxSizing: 'border-box', minHeight: 48, padding: '14px 20px' }}
-                  onClick={() => setSelectedCommit(commit)}
+                  onClick={() => { setSelectedCommit(commit); setRightPanelOpen(true); }}
                   onMouseEnter={() => setHovered(commit.hash)}
                   onMouseLeave={() => setHovered(null)}
                 >
@@ -587,66 +588,75 @@ export default function GitCommitGraph() {
         </div>
       </div>
       {/* Sağda sabit detay paneli */}
-      <div className="w-[380px] border-l border-[#181A20] bg-[#101114] flex flex-col p-10 overflow-y-auto" style={{ minWidth: 260 }}>
-        {selectedCommit && selectedCommit.author ? (
-          <>
-            <div className="flex items-center gap-4 mb-8">
-              <Avatar className="w-14 h-14">
-                <AvatarImage src={selectedCommit.author.avatar || undefined} />
-                <AvatarFallback>{selectedCommit.author.name ? selectedCommit.author.name[0] : "?"}</AvatarFallback>
-              </Avatar>
-              <div>
-                <div className="font-bold text-xl text-[#E5E7EB]">{selectedCommit.author.name || "Unknown"}</div>
-                <div className="text-sm text-[#A1A1AA]">{selectedCommit.date || "-"}</div>
-              </div>
-            </div>
-            <div className="text-2xl font-semibold mb-3 text-[#E5E7EB]">{selectedCommit.message || "No message"}</div>
-            <div className="text-sm text-[#A1A1AA] mb-5 font-mono">{selectedCommit.hash || "-"}</div>
-            <div className="mb-5">
-              <span className="inline-block px-3 py-1 rounded bg-[#23242a] text-[13px] font-mono text-[#4fc3f7] border border-[#23242a]">{selectedCommit.branch || "-"}</span>
-            </div>
-            <Separator className="my-6 bg-[#23242a]" />
-            <div className="mb-3 text-sm text-[#A1A1AA] font-semibold">Changed Files</div>
-            <div className="flex flex-col gap-3">
-              {(selectedCommit.files || []).map((file: any, idx: number) => (
-                <div key={idx}>
-                  <div
-                    className={`flex items-center gap-2 text-[12px] text-[#b0b4c1] bg-[#181A20] rounded px-2 py-1 cursor-pointer transition-all \
-                      ${previewFileIdx === idx ? "ring-2 ring-[#4fc3f7] bg-[#1a2a3a]" : "hover:bg-[#23242a]"}`}
-                    onClick={() => setPreviewFileIdx(previewFileIdx === idx ? null : idx)}
-                  >
-                    <FileText className="w-4 h-4 mr-2 text-[#4fc3f7]" />
-                    <span className="truncate max-w-[160px]">{file.path || "-"}</span>
-                    <span className="ml-auto flex items-center gap-2">
-                      <span className="text-green-400 font-mono text-xs">+{file.additions || 0}</span>
-                      <span className="text-red-400 font-mono ml-2 text-xs">-{file.deletions || 0}</span>
-                      <button
-                        className="ml-2 p-1 rounded hover:bg-[#23242a] transition"
-                        onClick={e => { e.stopPropagation(); setFullscreenDiffIdx(idx); }}
-                        title="Show full diff"
-                      >
-                        <Maximize2 className="w-3.5 h-3.5 text-[#4fc3f7]" />
-                      </button>
-                    </span>
-                  </div>
-                  {previewFileIdx === idx && (
-                    <div className="mt-2 mb-2">
-                      <DiffView />
-                    </div>
-                  )}
-                  {fullscreenDiffIdx === idx && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
-                      <DiffView fullscreen onClose={() => setFullscreenDiffIdx(null)} />
-                    </div>
-                  )}
+      {rightPanelOpen && (
+        <div className="w-[380px] border-l border-[#181A20] bg-[#101114] flex flex-col p-10 overflow-y-auto relative" style={{ minWidth: 260 }}>
+          <button
+            className="absolute top-3 right-3 p-2 rounded hover:bg-[#23242a] transition"
+            onClick={() => setRightPanelOpen(false)}
+            title="Kapat"
+          >
+            <X className="w-5 h-5 text-[#A1A1AA]" />
+          </button>
+          {selectedCommit && selectedCommit.author ? (
+            <>
+              <div className="flex items-center gap-4 mb-8">
+                <Avatar className="w-14 h-14">
+                  <AvatarImage src={selectedCommit.author.avatar || undefined} />
+                  <AvatarFallback>{selectedCommit.author.name ? selectedCommit.author.name[0] : "?"}</AvatarFallback>
+                </Avatar>
+                <div>
+                  <div className="font-bold text-xl text-[#E5E7EB]">{selectedCommit.author.name || "Unknown"}</div>
+                  <div className="text-sm text-[#A1A1AA]">{selectedCommit.date || "-"}</div>
                 </div>
-              ))}
-            </div>
-          </>
-        ) : (
-          <div className="text-[#A1A1AA] text-[15px] mt-16 text-center">Select a commit to see details</div>
-        )}
-      </div>
+              </div>
+              <div className="text-2xl font-semibold mb-3 text-[#E5E7EB]">{selectedCommit.message || "No message"}</div>
+              <div className="text-sm text-[#A1A1AA] mb-5 font-mono">{selectedCommit.hash || "-"}</div>
+              <div className="mb-5">
+                <span className="inline-block px-3 py-1 rounded bg-[#23242a] text-[13px] font-mono text-[#4fc3f7] border border-[#23242a]">{selectedCommit.branch || "-"}</span>
+              </div>
+              <Separator className="my-6 bg-[#23242a]" />
+              <div className="mb-3 text-sm text-[#A1A1AA] font-semibold">Changed Files</div>
+              <div className="flex flex-col gap-3">
+                {(selectedCommit.files || []).map((file: any, idx: number) => (
+                  <div key={idx}>
+                    <div
+                      className={`flex items-center gap-2 text-[12px] text-[#b0b4c1] bg-[#181A20] rounded px-2 py-1 cursor-pointer transition-all \
+                        ${previewFileIdx === idx ? "ring-2 ring-[#4fc3f7] bg-[#1a2a3a]" : "hover:bg-[#23242a]"}`}
+                      onClick={() => setPreviewFileIdx(previewFileIdx === idx ? null : idx)}
+                    >
+                      <FileText className="w-4 h-4 mr-2 text-[#4fc3f7]" />
+                      <span className="truncate max-w-[160px]">{file.path || "-"}</span>
+                      <span className="ml-auto flex items-center gap-2">
+                        <span className="text-green-400 font-mono text-xs">+{file.additions || 0}</span>
+                        <span className="text-red-400 font-mono ml-2 text-xs">-{file.deletions || 0}</span>
+                        <button
+                          className="ml-2 p-1 rounded hover:bg-[#23242a] transition"
+                          onClick={e => { e.stopPropagation(); setFullscreenDiffIdx(idx); }}
+                          title="Show full diff"
+                        >
+                          <Maximize2 className="w-3.5 h-3.5 text-[#4fc3f7]" />
+                        </button>
+                      </span>
+                    </div>
+                    {previewFileIdx === idx && (
+                      <div className="mt-2 mb-2">
+                        <DiffView />
+                      </div>
+                    )}
+                    {fullscreenDiffIdx === idx && (
+                      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+                        <DiffView fullscreen onClose={() => setFullscreenDiffIdx(null)} />
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className="text-[#A1A1AA] text-[15px] mt-16 text-center">Select a commit to see details</div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
