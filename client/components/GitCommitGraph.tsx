@@ -501,120 +501,121 @@ export default function GitCommitGraph() {
         </div>
         {/* Commit Graph */}
         <div className="relative flex-1 overflow-y-auto" style={{ minHeight: commitData.length * 44 + 40 }}>
-          {commitData.map((commit, i) => {
-            const branchX = 30 + branchOrder[commit.branch] * 18; // graph alanı sabit ve dar
-            const y = i * 44 + 32;
-            const isSelected = selectedCommit && selectedCommit.hash === commit.hash;
-            const isHovered = hovered === commit.hash;
-            return (
-              <div
-                key={commit.hash}
-                className={`flex flex-row items-center transition-all duration-150 cursor-pointer \
-                  ${isSelected ? "bg-[#23242a] border-l-2 border-[#4fc3f7]" : isHovered ? "bg-[#202126]" : "hover:bg-[#202126]"}`}
-                style={{ position: "absolute", left: 0, top: y - 22, width: "100%", height: 40, borderRadius: 8 }}
-                onClick={() => setSelectedCommit(commit)}
-                onMouseEnter={() => setHovered(commit.hash)}
-                onMouseLeave={() => setHovered(null)}
-              >
-                {/* Graph alanı */}
-                <div className="w-16 flex-shrink-0 relative h-full flex items-center justify-center">
-                  {/* Branch çizgileri ve merge pathleri */}
-                  <svg width={60} height={40} className="absolute left-0 top-0">
-                    {Object.entries(branchOrder).map(([branch, idx]) => (
-                      <line
-                        key={branch}
-                        x1={30 + idx * 18}
-                        y1={0}
-                        x2={30 + idx * 18}
-                        y2={40}
-                        stroke={branchColors[branch]}
-                        strokeWidth={2}
-                        opacity={0.25}
-                      />
-                    ))}
-                    {/* Merge çizgileri */}
-                    {(parentMap[commit.hash] || []).map((parentHash) => {
-                      const parentIdx = commitData.findIndex((c) => c.hash === parentHash);
-                      if (parentIdx === -1) return null;
-                      const toY = parentIdx * 44 + 32 - (y - 22);
-                      const toX = 30 + branchOrder[commitData[parentIdx].branch] * 18;
-                      return (
-                        <path
-                          key={commit.hash + parentHash}
-                          d={`M${branchX},20 C${branchX},${20 + (toY - 20) / 2} ${toX},${20 + (toY - 20) / 2} ${toX},${toY}`}
-                          stroke={branchColors[commit.branch]}
+          <div className="flex flex-col relative" style={{ minHeight: commitData.length * 44 + 40 }}>
+            {commitData.map((commit, i) => {
+              const branchX = 30 + branchOrder[commit.branch] * 18; // graph alanı sabit ve dar
+              const y = i * 44;
+              const isSelected = selectedCommit && selectedCommit.hash === commit.hash;
+              const isHovered = hovered === commit.hash;
+              return (
+                <div
+                  key={commit.hash}
+                  className={`flex flex-row items-center transition-all duration-150 cursor-pointer \
+                    ${isSelected ? "bg-[#23242a] border-l-2 border-[#4fc3f7]" : isHovered ? "bg-[#202126]" : "hover:bg-[#202126]"}`}
+                  style={{ height: 44, borderRadius: 8 }}
+                  onClick={() => setSelectedCommit(commit)}
+                  onMouseEnter={() => setHovered(commit.hash)}
+                  onMouseLeave={() => setHovered(null)}
+                >
+                  {/* Graph alanı */}
+                  <div className="w-16 flex-shrink-0 relative h-full flex items-center justify-center">
+                    <svg width={60} height={44} className="absolute left-0 top-0">
+                      {Object.entries(branchOrder).map(([branch, idx]) => (
+                        <line
+                          key={branch}
+                          x1={30 + idx * 18}
+                          y1={0}
+                          x2={30 + idx * 18}
+                          y2={44}
+                          stroke={branchColors[branch]}
                           strokeWidth={2}
-                          fill="none"
-                          opacity={0.5}
+                          opacity={0.25}
                         />
-                      );
-                    })}
-                    {/* Commit Dot */}
-                    <circle
-                      cx={branchX}
-                      cy={20}
-                      r={isSelected ? 7 : 5}
-                      fill={branchColors[commit.branch]}
-                      stroke="#23242a"
-                      strokeWidth={2}
-                      style={{ filter: isSelected ? "drop-shadow(0 0 6px #4fc3f7cc)" : isHovered ? "drop-shadow(0 0 4px #7a7e87aa)" : "none" }}
-                    />
-                  </svg>
-                </div>
-                {/* Commit mesajı ve meta */}
-                <div className="flex-1 flex flex-col justify-center pl-2 min-w-0">
-                  <div className="flex items-center gap-2 min-w-0">
-                    <span className="truncate font-medium text-[14px] text-[#E5E7EB] max-w-[320px]">{commit.message}</span>
-                    {commit.type === "merge" && <GitMerge className="w-3 h-3 text-[#fbc02d] ml-1" />}
-                    {commit.type === "branch" && <GitBranch className="w-3 h-3 text-[#4fc3f7] ml-1" />}
-                    <span className="ml-2 px-1.5 py-0.5 rounded bg-[#23242a] text-[11px] font-mono text-[#4fc3f7] border border-[#23242a]">{commit.branch}</span>
+                      ))}
+                      {/* Merge çizgileri */}
+                      {(parentMap[commit.hash] || []).map((parentHash) => {
+                        const parentIdx = commitData.findIndex((c) => c.hash === parentHash);
+                        if (parentIdx === -1) return null;
+                        const toY = (parentIdx - i) * 44 + 22;
+                        const toX = 30 + branchOrder[commitData[parentIdx].branch] * 18;
+                        return (
+                          <path
+                            key={commit.hash + parentHash}
+                            d={`M${branchX},22 C${branchX},${22 + (toY - 22) / 2} ${toX},${22 + (toY - 22) / 2} ${toX},${toY}`}
+                            stroke={branchColors[commit.branch]}
+                            strokeWidth={2}
+                            fill="none"
+                            opacity={0.5}
+                          />
+                        );
+                      })}
+                      {/* Commit Dot */}
+                      <circle
+                        cx={branchX}
+                        cy={22}
+                        r={isSelected ? 7 : 5}
+                        fill={branchColors[commit.branch]}
+                        stroke="#23242a"
+                        strokeWidth={2}
+                        style={{ filter: isSelected ? "drop-shadow(0 0 6px #4fc3f7cc)" : isHovered ? "drop-shadow(0 0 4px #7a7e87aa)" : "none" }}
+                      />
+                    </svg>
                   </div>
-                  <div className="flex items-center gap-2 text-[11px] text-[#A1A1AA] mt-0.5">
-                    <Avatar className="w-4 h-4 mr-1">
-                      <AvatarImage src={commit.author.avatar} />
-                      <AvatarFallback>{commit.author.name[0]}</AvatarFallback>
-                    </Avatar>
-                    <span>{commit.author.name}</span>
-                    <span className="mx-1">•</span>
-                    <span>{commit.timeAgo}</span>
-                    <span className="mx-1">•</span>
-                    <span className="font-mono text-[#b0b4c1]">{commit.hash}</span>
+                  {/* Commit mesajı ve meta */}
+                  <div className="flex-1 flex flex-col justify-center pl-2 min-w-0">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="truncate font-medium text-[14px] text-[#E5E7EB] max-w-[320px]">{commit.message}</span>
+                      {commit.type === "merge" && <GitMerge className="w-3 h-3 text-[#fbc02d] ml-1" />}
+                      {commit.type === "branch" && <GitBranch className="w-3 h-3 text-[#4fc3f7] ml-1" />}
+                      <span className="ml-2 px-1.5 py-0.5 rounded bg-[#23242a] text-[11px] font-mono text-[#4fc3f7] border border-[#23242a]">{commit.branch}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-[11px] text-[#A1A1AA] mt-0.5">
+                      <Avatar className="w-4 h-4 mr-1">
+                        <AvatarImage src={commit.author.avatar} />
+                        <AvatarFallback>{commit.author.name[0]}</AvatarFallback>
+                      </Avatar>
+                      <span>{commit.author.name}</span>
+                      <span className="mx-1">•</span>
+                      <span>{commit.timeAgo}</span>
+                      <span className="mx-1">•</span>
+                      <span className="font-mono text-[#b0b4c1]">{commit.hash}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
       {/* Sağda sabit detay paneli */}
       <div className="w-[340px] border-l border-[#23242a] bg-[#1A1D23] flex flex-col p-8 overflow-y-auto" style={{ minWidth: 220 }}>
-        {selectedCommit ? (
+        {selectedCommit && selectedCommit.author ? (
           <>
             <div className="flex items-center gap-3 mb-6">
               <Avatar className="w-12 h-12">
-                <AvatarImage src={selectedCommit.author.avatar} />
-                <AvatarFallback>{selectedCommit.author.name[0]}</AvatarFallback>
+                <AvatarImage src={selectedCommit.author.avatar || undefined} />
+                <AvatarFallback>{selectedCommit.author.name ? selectedCommit.author.name[0] : "?"}</AvatarFallback>
               </Avatar>
               <div>
-                <div className="font-bold text-lg text-[#E5E7EB]">{selectedCommit.author.name}</div>
-                <div className="text-xs text-[#A1A1AA]">{selectedCommit.date}</div>
+                <div className="font-bold text-lg text-[#E5E7EB]">{selectedCommit.author.name || "Unknown"}</div>
+                <div className="text-xs text-[#A1A1AA]">{selectedCommit.date || "-"}</div>
               </div>
             </div>
-            <div className="text-xl font-semibold mb-2 text-[#E5E7EB]">{selectedCommit.message}</div>
-            <div className="text-xs text-[#A1A1AA] mb-4 font-mono">{selectedCommit.hash}</div>
+            <div className="text-xl font-semibold mb-2 text-[#E5E7EB]">{selectedCommit.message || "No message"}</div>
+            <div className="text-xs text-[#A1A1AA] mb-4 font-mono">{selectedCommit.hash || "-"}</div>
             <div className="mb-4">
-              <span className="inline-block px-2 py-0.5 rounded bg-[#23242a] text-[11px] font-mono text-[#4fc3f7] border border-[#23242a]">{selectedCommit.branch}</span>
+              <span className="inline-block px-2 py-0.5 rounded bg-[#23242a] text-[11px] font-mono text-[#4fc3f7] border border-[#23242a]">{selectedCommit.branch || "-"}</span>
             </div>
             <Separator className="my-4 bg-[#23242a]" />
             <div className="mb-2 text-xs text-[#A1A1AA] font-semibold">Changed Files</div>
             <div className="flex flex-col gap-2">
-              {selectedCommit.files.map((file: any, idx: number) => (
+              {(selectedCommit.files || []).map((file: any, idx: number) => (
                 <div key={idx} className="flex items-center gap-2 text-xs text-[#b0b4c1] bg-[#181A20] rounded px-2 py-1">
                   <FileText className="w-4 h-4 mr-1 text-[#4fc3f7]" />
-                  <span className="truncate max-w-[160px]">{file.path}</span>
+                  <span className="truncate max-w-[160px]">{file.path || "-"}</span>
                   <span className="ml-auto">
-                    <span className="text-green-400 font-mono">+{file.additions}</span>
-                    <span className="text-red-400 font-mono ml-2">-{file.deletions}</span>
+                    <span className="text-green-400 font-mono">+{file.additions || 0}</span>
+                    <span className="text-red-400 font-mono ml-2">-{file.deletions || 0}</span>
                   </span>
                 </div>
               ))}
