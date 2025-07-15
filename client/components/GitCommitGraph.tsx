@@ -528,6 +528,7 @@ export default function GitCommitGraph() {
   const [fullscreenDiffIdx, setFullscreenDiffIdx] = useState<number | null>(null);
   const [rightPanelOpen, setRightPanelOpen] = useState(true);
   const [leftPanelOpen, setLeftPanelOpen] = useState(true);
+  const [rightPanelFullscreen, setRightPanelFullscreen] = useState(false); // NEW
 
   // Dummy diff data
   const dummyDiff = [
@@ -540,7 +541,7 @@ export default function GitCommitGraph() {
   return (
     <div className="flex flex-row h-full w-full bg-[#101114] text-[#E5E7EB] font-inter">
       {/* Commit History Alanı */}
-      {leftPanelOpen && (
+      {leftPanelOpen && !rightPanelFullscreen && (
         <div className={`flex-1 flex flex-col relative overflow-x-auto transition-all duration-200 ${rightPanelOpen ? '' : '!w-full'}`} style={{ minWidth: 700, background: '#181A20' }}>
           {/* Header */}
           <div className="px-10 py-6 border-b border-[#181A20] bg-[#101114] flex-shrink-0 flex items-center justify-between relative">
@@ -548,13 +549,7 @@ export default function GitCommitGraph() {
               <h2 className="text-xl font-bold tracking-tight">Commit History</h2>
               <p className="text-sm text-[#A1A1AA] mt-1">Project commit graph</p>
             </div>
-            <button
-              className="absolute top-3 right-3 p-2 rounded hover:bg-[#23242a] transition"
-              onClick={() => setLeftPanelOpen(false)}
-              title="Kapat"
-            >
-              <X className="w-5 h-5 text-[#A1A1AA]" />
-            </button>
+            {/* Çarpı iconu kaldırıldı */}
           </div>
           {/* Commit Graph */}
           <div className="relative flex-1 overflow-y-auto" style={{ minHeight: commitData.length * 64 + 40, background: '#181A20' }}>
@@ -566,9 +561,9 @@ export default function GitCommitGraph() {
                   <div
                     key={commit.hash}
                     className={`flex flex-col transition-all duration-150 cursor-pointer w-full \
-                      border \
-                      ${isSelected ? "border-[#4fc3f7] bg-[#17293a] shadow-lg scale-[0.99]" : isHovered ? "border-[#23242a] bg-[#181d22] scale-[0.995]" : "border-transparent hover:border-[#23242a] hover:bg-[#181d22]"}`}
-                    style={{ borderRadius: 10, margin: '4px 0', boxSizing: 'border-box', minHeight: 48, padding: '14px 20px' }}
+                      border shadow-md \
+                      ${isSelected ? "border-[#4fc3f7] bg-[#1a263a] shadow-xl scale-[0.99]" : isHovered ? "border-[#3b82f6] bg-[#1a2230] scale-[0.995]" : "border-[#23242a] bg-[#181d22] hover:border-[#4fc3f7] hover:bg-[#1a2230]"}`}
+                    style={{ borderRadius: 12, margin: '6px 0', boxSizing: 'border-box', minHeight: 54, padding: '16px 22px', boxShadow: isSelected ? '0 4px 24px 0 #4fc3f7cc' : isHovered ? '0 2px 8px 0 #3b82f633' : '0 1px 4px 0 #23242a22' }}
                     onClick={() => { setSelectedCommit(commit); setRightPanelOpen(true); setLeftPanelOpen(true); }}
                     onMouseEnter={() => setHovered(commit.hash)}
                     onMouseLeave={() => setHovered(null)}
@@ -599,13 +594,25 @@ export default function GitCommitGraph() {
       )}
       {/* Sağda sabit detay paneli */}
       {rightPanelOpen && (
-        <div className={`w-[380px] border-l border-[#181A20] bg-[#101114] flex flex-col p-10 overflow-y-auto relative transition-all duration-200 ${!leftPanelOpen ? '!w-full' : ''}`} style={{ minWidth: 260 }}>
+        <div className={`border-l border-[#181A20] bg-[#101114] flex flex-col p-10 overflow-y-auto relative transition-all duration-200 \
+          ${rightPanelFullscreen ? 'w-full !min-w-0 !max-w-full z-40' : 'w-[380px]'} \
+          ${!leftPanelOpen || rightPanelFullscreen ? '!w-full' : ''}`}
+          style={{ minWidth: rightPanelFullscreen ? 0 : 260 }}
+        >
           <button
             className="absolute top-3 right-3 p-2 rounded hover:bg-[#23242a] transition"
             onClick={() => setRightPanelOpen(false)}
             title="Kapat"
+            style={{ display: rightPanelFullscreen ? 'none' : undefined }}
           >
             <X className="w-5 h-5 text-[#A1A1AA]" />
+          </button>
+          <button
+            className="absolute top-3 right-12 p-2 rounded hover:bg-[#23242a] transition"
+            onClick={() => setRightPanelFullscreen(f => !f)}
+            title={rightPanelFullscreen ? "Önceki pozisyona dön" : "Ekranı kapla"}
+          >
+            <Maximize2 className="w-5 h-5 text-[#4fc3f7]" style={{ transform: rightPanelFullscreen ? 'rotate(45deg)' : 'none' }} />
           </button>
           {selectedCommit && selectedCommit.author ? (
             <>
