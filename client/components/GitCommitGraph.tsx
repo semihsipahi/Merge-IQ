@@ -1,7 +1,7 @@
-import React, { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { FileText, GitBranch, GitMerge, Maximize2, X } from "lucide-react";
+import { useState } from "react";
 import DiffView from "./DiffView";
 
 interface CommitNode {
@@ -525,7 +525,9 @@ export default function GitCommitGraph() {
   const [hovered, setHovered] = useState<string | null>(null);
   const [selectedCommit, setSelectedCommit] = useState<any>(null);
   const [previewFileIdx, setPreviewFileIdx] = useState<number | null>(null);
-  const [fullscreenDiffIdx, setFullscreenDiffIdx] = useState<number | null>(null);
+  const [fullscreenDiffIdx, setFullscreenDiffIdx] = useState<number | null>(
+    null,
+  );
   const [rightPanelOpen, setRightPanelOpen] = useState(true);
   const [leftPanelOpen, setLeftPanelOpen] = useState(true);
   const [rightPanelFullscreen, setRightPanelFullscreen] = useState(false); // NEW
@@ -541,38 +543,73 @@ export default function GitCommitGraph() {
   return (
     <div className="flex flex-row h-full w-full bg-[#101114] text-[#E5E7EB] font-inter">
       {/* Commit History Alanı */}
-      {leftPanelOpen && !rightPanelFullscreen && (
-        <div className={`flex-1 flex flex-col relative overflow-x-auto transition-all duration-200 ${rightPanelOpen ? '' : '!w-full'}`} style={{ minWidth: 700, background: '#181A20' }}>
+      {leftPanelOpen && (
+        <div
+          className={`flex-1 flex flex-col relative overflow-x-auto transition-all duration-200 ${rightPanelOpen ? "" : "!w-full"}`}
+          style={{ minWidth: 700, background: "#181A20" }}
+        >
           {/* Header */}
           <div className="px-10 py-6 border-b border-[#181A20] bg-[#101114] flex-shrink-0 flex items-center justify-between relative">
             <div>
-              <h2 className="text-xl font-bold tracking-tight">Commit History</h2>
-              <p className="text-sm text-[#A1A1AA] mt-1">Project commit graph</p>
+              <h2 className="text-xl font-bold tracking-tight">
+                Commit History
+              </h2>
+              <p className="text-sm text-[#A1A1AA] mt-1">
+                Project commit graph
+              </p>
             </div>
             {/* Çarpı iconu kaldırıldı */}
           </div>
           {/* Commit Graph */}
-          <div className="relative flex-1 overflow-y-auto" style={{ minHeight: commitData.length * 64 + 40, background: '#181A20' }}>
-            <div className="flex flex-col relative" style={{ minHeight: commitData.length * 64 + 40 }}>
+          <div
+            className="relative flex-1 overflow-y-auto"
+            style={{
+              minHeight: commitData.length * 64 + 40,
+              background: "#181A20",
+            }}
+          >
+            <div
+              className="flex flex-col relative"
+              style={{ minHeight: commitData.length * 64 + 40 }}
+            >
               {commitData.map((commit, i) => {
-                const isSelected = selectedCommit && selectedCommit.hash === commit.hash;
+                const isSelected =
+                  selectedCommit && selectedCommit.hash === commit.hash;
                 const isHovered = hovered === commit.hash;
                 return (
                   <div
                     key={commit.hash}
                     className={`flex flex-col transition-all duration-150 cursor-pointer w-full \
-                      border shadow-md \
-                      ${isSelected ? "border-[#4fc3f7] bg-[#1a263a] shadow-xl scale-[0.99]" : isHovered ? "border-[#3b82f6] bg-[#1a2230] scale-[0.995]" : "border-[#23242a] bg-[#181d22] hover:border-[#4fc3f7] hover:bg-[#1a2230]"}`}
-                    style={{ borderRadius: 12, margin: '6px 0', boxSizing: 'border-box', minHeight: 54, padding: '16px 22px', boxShadow: isSelected ? '0 4px 24px 0 #4fc3f7cc' : isHovered ? '0 2px 8px 0 #3b82f633' : '0 1px 4px 0 #23242a22' }}
-                    onClick={() => { setSelectedCommit(commit); setRightPanelOpen(true); setLeftPanelOpen(true); }}
+                      border \
+                      ${isSelected ? "border-[#4fc3f7] bg-[#17293a] shadow-lg scale-[0.99]" : isHovered ? "border-[#23242a] bg-[#181d22] scale-[0.995]" : "border-transparent hover:border-[#23242a] hover:bg-[#181d22]"}`}
+                    style={{
+                      borderRadius: 10,
+                      margin: "4px 0",
+                      boxSizing: "border-box",
+                      minHeight: 48,
+                      padding: "14px 20px",
+                    }}
+                    onClick={() => {
+                      setSelectedCommit(commit);
+                      setRightPanelOpen(true);
+                      setLeftPanelOpen(true);
+                    }}
                     onMouseEnter={() => setHovered(commit.hash)}
                     onMouseLeave={() => setHovered(null)}
                   >
                     <div className="flex items-center gap-2 min-w-0 w-full">
-                      <span className="truncate font-semibold text-[13px] text-[#E5E7EB] flex-1">{commit.message}</span>
-                      {commit.type === "merge" && <GitMerge className="w-3 h-3 text-[#fbc02d] ml-1" />}
-                      {commit.type === "branch" && <GitBranch className="w-3 h-3 text-[#4fc3f7] ml-1" />}
-                      <span className="ml-2 px-1.5 py-0.5 rounded bg-[#23242a] text-[10px] font-mono text-[#4fc3f7] border border-[#23242a]">{commit.branch}</span>
+                      <span className="truncate font-semibold text-[13px] text-[#E5E7EB] flex-1">
+                        {commit.message}
+                      </span>
+                      {commit.type === "merge" && (
+                        <GitMerge className="w-3 h-3 text-[#fbc02d] ml-1" />
+                      )}
+                      {commit.type === "branch" && (
+                        <GitBranch className="w-3 h-3 text-[#4fc3f7] ml-1" />
+                      )}
+                      <span className="ml-2 px-1.5 py-0.5 rounded bg-[#23242a] text-[10px] font-mono text-[#4fc3f7] border border-[#23242a]">
+                        {commit.branch}
+                      </span>
                     </div>
                     <div className="flex items-center gap-1 text-[11px] text-[#A1A1AA] mt-0.5 w-full">
                       <Avatar className="w-3.5 h-3.5 mr-1">
@@ -583,7 +620,9 @@ export default function GitCommitGraph() {
                       <span className="mx-1">•</span>
                       <span>{commit.timeAgo}</span>
                       <span className="mx-1">•</span>
-                      <span className="font-mono text-[#b0b4c1]">{commit.hash}</span>
+                      <span className="font-mono text-[#b0b4c1]">
+                        {commit.hash}
+                      </span>
                     </div>
                   </div>
                 );
@@ -594,10 +633,9 @@ export default function GitCommitGraph() {
       )}
       {/* Sağda sabit detay paneli */}
       {rightPanelOpen && (
-        <div className={`border-l border-[#181A20] bg-[#101114] flex flex-col p-10 overflow-y-auto relative transition-all duration-200 \
-          ${rightPanelFullscreen ? 'w-full !min-w-0 !max-w-full z-40' : 'w-[380px]'} \
-          ${!leftPanelOpen || rightPanelFullscreen ? '!w-full' : ''}`}
-          style={{ minWidth: rightPanelFullscreen ? 0 : 260 }}
+        <div
+          className={`w-[380px] border-l border-[#181A20] bg-[#101114] flex flex-col p-10 overflow-y-auto relative transition-all duration-200 ${!leftPanelOpen ? "!w-full" : ""}`}
+          style={{ minWidth: 260 }}
         >
           <button
             className="absolute top-3 right-3 p-2 rounded hover:bg-[#23242a] transition"
@@ -618,37 +656,66 @@ export default function GitCommitGraph() {
             <>
               <div className="flex items-center gap-4 mb-8">
                 <Avatar className="w-14 h-14">
-                  <AvatarImage src={selectedCommit.author.avatar || undefined} />
-                  <AvatarFallback>{selectedCommit.author.name ? selectedCommit.author.name[0] : "?"}</AvatarFallback>
+                  <AvatarImage
+                    src={selectedCommit.author.avatar || undefined}
+                  />
+                  <AvatarFallback>
+                    {selectedCommit.author.name
+                      ? selectedCommit.author.name[0]
+                      : "?"}
+                  </AvatarFallback>
                 </Avatar>
                 <div>
-                  <div className="font-bold text-xl text-[#E5E7EB]">{selectedCommit.author.name || "Unknown"}</div>
-                  <div className="text-sm text-[#A1A1AA]">{selectedCommit.date || "-"}</div>
+                  <div className="font-bold text-xl text-[#E5E7EB]">
+                    {selectedCommit.author.name || "Unknown"}
+                  </div>
+                  <div className="text-sm text-[#A1A1AA]">
+                    {selectedCommit.date || "-"}
+                  </div>
                 </div>
               </div>
-              <div className="text-2xl font-semibold mb-3 text-[#E5E7EB]">{selectedCommit.message || "No message"}</div>
-              <div className="text-sm text-[#A1A1AA] mb-5 font-mono">{selectedCommit.hash || "-"}</div>
+              <div className="text-2xl font-semibold mb-3 text-[#E5E7EB]">
+                {selectedCommit.message || "No message"}
+              </div>
+              <div className="text-sm text-[#A1A1AA] mb-5 font-mono">
+                {selectedCommit.hash || "-"}
+              </div>
               <div className="mb-5">
-                <span className="inline-block px-3 py-1 rounded bg-[#23242a] text-[13px] font-mono text-[#4fc3f7] border border-[#23242a]">{selectedCommit.branch || "-"}</span>
+                <span className="inline-block px-3 py-1 rounded bg-[#23242a] text-[13px] font-mono text-[#4fc3f7] border border-[#23242a]">
+                  {selectedCommit.branch || "-"}
+                </span>
               </div>
               <Separator className="my-6 bg-[#23242a]" />
-              <div className="mb-3 text-sm text-[#A1A1AA] font-semibold">Changed Files</div>
+              <div className="mb-3 text-sm text-[#A1A1AA] font-semibold">
+                Changed Files
+              </div>
               <div className="flex flex-col gap-3">
                 {(selectedCommit.files || []).map((file: any, idx: number) => (
                   <div key={idx}>
                     <div
                       className={`flex items-center gap-2 text-[12px] text-[#b0b4c1] bg-[#181A20] rounded px-2 py-1 cursor-pointer transition-all \
                         ${previewFileIdx === idx ? "ring-2 ring-[#4fc3f7] bg-[#1a2a3a]" : "hover:bg-[#23242a]"}`}
-                      onClick={() => setPreviewFileIdx(previewFileIdx === idx ? null : idx)}
+                      onClick={() =>
+                        setPreviewFileIdx(previewFileIdx === idx ? null : idx)
+                      }
                     >
                       <FileText className="w-4 h-4 mr-2 text-[#4fc3f7]" />
-                      <span className="truncate max-w-[160px]">{file.path || "-"}</span>
+                      <span className="truncate max-w-[160px]">
+                        {file.path || "-"}
+                      </span>
                       <span className="ml-auto flex items-center gap-2">
-                        <span className="text-green-400 font-mono text-xs">+{file.additions || 0}</span>
-                        <span className="text-red-400 font-mono ml-2 text-xs">-{file.deletions || 0}</span>
+                        <span className="text-green-400 font-mono text-xs">
+                          +{file.additions || 0}
+                        </span>
+                        <span className="text-red-400 font-mono ml-2 text-xs">
+                          -{file.deletions || 0}
+                        </span>
                         <button
                           className="ml-2 p-1 rounded hover:bg-[#23242a] transition"
-                          onClick={e => { e.stopPropagation(); setFullscreenDiffIdx(idx); }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setFullscreenDiffIdx(idx);
+                          }}
                           title="Show full diff"
                         >
                           <Maximize2 className="w-3.5 h-3.5 text-[#4fc3f7]" />
@@ -662,7 +729,10 @@ export default function GitCommitGraph() {
                     )}
                     {fullscreenDiffIdx === idx && (
                       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
-                        <DiffView fullscreen onClose={() => setFullscreenDiffIdx(null)} />
+                        <DiffView
+                          fullscreen
+                          onClose={() => setFullscreenDiffIdx(null)}
+                        />
                       </div>
                     )}
                   </div>
@@ -670,7 +740,9 @@ export default function GitCommitGraph() {
               </div>
             </>
           ) : (
-            <div className="text-[#A1A1AA] text-[15px] mt-16 text-center">Select a commit to see details</div>
+            <div className="text-[#A1A1AA] text-[15px] mt-16 text-center">
+              Select a commit to see details
+            </div>
           )}
         </div>
       )}

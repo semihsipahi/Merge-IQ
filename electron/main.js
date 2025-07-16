@@ -160,21 +160,25 @@ const createMenu = () => {
   // macOS specific menu adjustments
   if (process.platform === "darwin") {
     template[0].submenu.splice(1, 0, { type: "separator" });
+
     template[0].submenu.splice(2, 0, {
       label: "Services",
       role: "services",
       submenu: [],
     });
+
     template[0].submenu.splice(4, 0, {
       label: "Hide MergeIQ",
       accelerator: "Command+H",
       role: "hide",
     });
+
     template[0].submenu.splice(5, 0, {
       label: "Hide Others",
       accelerator: "Command+Shift+H",
       role: "hideothers",
     });
+
     template[0].submenu.splice(6, 0, {
       label: "Show All",
       role: "unhide",
