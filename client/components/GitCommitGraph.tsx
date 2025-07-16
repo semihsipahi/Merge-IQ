@@ -641,16 +641,23 @@ export default function GitCommitGraph() {
             className="absolute top-3 right-3 p-2 rounded hover:bg-[#23242a] transition"
             onClick={() => setRightPanelOpen(false)}
             title="Kapat"
-            style={{ display: rightPanelFullscreen ? 'none' : undefined }}
+            style={{ display: rightPanelFullscreen ? "none" : undefined }}
           >
             <X className="w-5 h-5 text-[#A1A1AA]" />
           </button>
           <button
             className="absolute top-3 right-12 p-2 rounded hover:bg-[#23242a] transition"
-            onClick={() => setRightPanelFullscreen(f => !f)}
-            title={rightPanelFullscreen ? "Önceki pozisyona dön" : "Ekranı kapla"}
+            onClick={() => setRightPanelFullscreen((f) => !f)}
+            title={
+              rightPanelFullscreen ? "Önceki pozisyona dön" : "Ekranı kapla"
+            }
           >
-            <Maximize2 className="w-5 h-5 text-[#4fc3f7]" style={{ transform: rightPanelFullscreen ? 'rotate(45deg)' : 'none' }} />
+            <Maximize2
+              className="w-5 h-5 text-[#4fc3f7]"
+              style={{
+                transform: rightPanelFullscreen ? "rotate(45deg)" : "none",
+              }}
+            />
           </button>
           {selectedCommit && selectedCommit.author ? (
             <>
